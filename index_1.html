@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NBKRIST Library Management System</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-page">
+        <div class="login-container">
+            <div class="college-brand">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h1>NBKRIST</h1>
+                <p>Library Management System</p>
+            </div>
+
+            <div class="login-card card">
+                <div class="login-toggle">
+                    <button type="button" class="toggle-btn active" data-type="student">Student</button>
+                    <button type="button" class="toggle-btn" data-type="admin">Admin</button>
+                </div>
+
+                <form id="loginForm" class="login-form">
+                    <div class="form-group">
+                        <label class="form-label" id="usernameLabel">Roll Number</label>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Enter your roll number" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="rememberMe" name="rememberMe">
+                            <span class="checkmark"></span>
+                            Remember me
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn--primary btn--full-width" id="loginBtn">
+                        <span class="login-text">Sign In</span>
+                        <i class="fas fa-spinner fa-spin login-loading hidden"></i>
+                    </button>
+                </form>
+
+                <div class="demo-credentials">
+                    <p><strong>Demo Credentials:</strong></p>
+                    <p><button type="button" class="demo-btn" data-username="21CSE001" data-password="password" data-type="student">Student: 21CSE001 / password</button></p>
+                    <p><button type="button" class="demo-btn" data-username="admin" data-password="admin123" data-type="admin">Admin: admin / admin123</button></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="mainApp" class="main-app hidden">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="logo-small">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>NBKRIST</span>
+                </div>
+            </div>
+
+            <div class="header-center">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search books, authors..." id="globalSearch">
+                </div>
+            </div>
+
+            <div class="header-right">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="notification-bell">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </div>
+                <div class="user-profile" id="userProfile">
+                    <img src="/api/placeholder/40/40" alt="Profile">
+                    <span class="user-name"></span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </header>
+
+        <div class="app-layout">
+            <!-- Sidebar -->
+            <nav class="sidebar" id="sidebar">
+                <ul class="nav-menu">
+                    <li class="nav-item active" data-page="dashboard">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </li>
+                    <li class="nav-item" data-page="search">
+                        <i class="fas fa-search"></i>
+                        <span>Search Books</span>
+                    </li>
+                    <li class="nav-item" data-page="borrowed" id="borrowedNav">
+                        <i class="fas fa-book-open"></i>
+                        <span>My Books</span>
+                        <span class="nav-badge">3</span>
+                    </li>
+                    <li class="nav-item admin-only hidden" data-page="manage-books">
+                        <i class="fas fa-book"></i>
+                        <span>Manage Books</span>
+                    </li>
+                    <li class="nav-item admin-only hidden" data-page="manage-users">
+                        <i class="fas fa-users"></i>
+                        <span>Manage Users</span>
+                    </li>
+                    <li class="nav-item admin-only hidden" data-page="analytics">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Analytics</span>
+                    </li>
+                    <li class="nav-item" data-page="profile">
+                        <i class="fas fa-user"></i>
+                        <span>Profile</span>
+                    </li>
+                    <li class="nav-item logout" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <!-- Student Dashboard -->
+                <div id="dashboard" class="page-content active">
+                    <div class="welcome-banner">
+                        <div class="welcome-text">
+                            <h1 class="welcome-title">Welcome back, <span id="userName">User</span>!</h1>
+                            <p class="welcome-subtitle">Ready to explore new books today?</p>
+                        </div>
+                        <div class="welcome-stats student-only">
+                            <div class="stat-card">
+                                <div class="stat-icon">📚</div>
+                                <div class="stat-value" id="booksCurrently">3</div>
+                                <div class="stat-label">Current Books</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">🔥</div>
+                                <div class="stat-value" id="readingStreak">12</div>
+                                <div class="stat-label">Day Streak</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">⭐</div>
+                                <div class="stat-value" id="xpPoints">340</div>
+                                <div class="stat-label">XP Points</div>
+                            </div>
+                        </div>
+
+                        <!-- Admin Stats -->
+                        <div class="admin-stats admin-only hidden">
+                            <div class="admin-stat-card">
+                                <div class="stat-value" id="totalBooks">1250</div>
+                                <div class="stat-label">Total Books</div>
+                            </div>
+                            <div class="admin-stat-card">
+                                <div class="stat-value" id="booksIssued">234</div>
+                                <div class="stat-label">Books Issued</div>
+                            </div>
+                            <div class="admin-stat-card">
+                                <div class="stat-value" id="overdueBooks">12</div>
+                                <div class="stat-label">Overdue Books</div>
+                            </div>
+                            <div class="admin-stat-card">
+                                <div class="stat-value" id="activeMembers">486</div>
+                                <div class="stat-label">Active Members</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Student Content -->
+                    <div class="student-dashboard student-only">
+                        <!-- Borrowed Books Section -->
+                        <section class="dashboard-section">
+                            <div class="section-header">
+                                <h2>Currently Borrowed Books</h2>
+                                <span class="section-badge" id="borrowedCount">3</span>
+                            </div>
+                            <div class="borrowed-books-container" id="borrowedBooksContainer">
+                                <p>Loading borrowed books...</p>
+                            </div>
+                        </section>
+
+                        <!-- Recommendations Section -->
+                        <section class="dashboard-section">
+                            <div class="section-header">
+                                <h2>Recommended for You</h2>
+                                <span class="branch-tag" id="branchTag">CSE</span>
+                            </div>
+                            <div class="recommendations-carousel" id="recommendationsContainer">
+                                <p>Loading recommendations...</p>
+                            </div>
+                        </section>
+
+                        <!-- Achievements Section -->
+                        <section class="dashboard-section">
+                            <div class="section-header">
+                                <h2>Your Achievements</h2>
+                            </div>
+                            <div class="achievements-grid" id="achievementsContainer">
+                                <p>Loading achievements...</p>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Admin Content -->
+                    <div class="admin-dashboard admin-only hidden">
+                        <section class="dashboard-section">
+                            <div class="section-header">
+                                <h2>Recent Activity</h2>
+                            </div>
+                            <div class="admin-activity" id="adminActivity">
+                                <p>Loading activity...</p>
+                            </div>
+                        </section>
+
+                        <section class="dashboard-section">
+                            <div class="section-header">
+                                <h2>Quick Actions</h2>
+                            </div>
+                            <div class="admin-quick-actions">
+                                <button class="action-btn" data-action="add-book">
+                                    <i class="fas fa-plus"></i>
+                                    <span>Add New Book</span>
+                                </button>
+                                <button class="action-btn" data-action="add-user">
+                                    <i class="fas fa-user-plus"></i>
+                                    <span>Add New User</span>
+                                </button>
+                                <button class="action-btn" data-action="generate-report">
+                                    <i class="fas fa-chart-line"></i>
+                                    <span>Generate Report</span>
+                                </button>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+                <!-- Search Page -->
+                <div id="search" class="page-content">
+                    <div class="search-header">
+                        <h1>Search Books</h1>
+                        <div class="search-filters">
+                            <select class="form-control filter-select" id="branchFilter">
+                                <option value="">All Branches</option>
+                                <option value="CSE">Computer Science</option>
+                                <option value="ECE">Electronics</option>
+                                <option value="MECH">Mechanical</option>
+                                <option value="CIVIL">Civil</option>
+                            </select>
+                            <select class="form-control filter-select" id="availabilityFilter">
+                                <option value="">All Books</option>
+                                <option value="available">Available</option>
+                                <option value="unavailable">Not Available</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="search-results-container">
+                        <div class="view-toggle">
+                            <button class="view-btn active" data-view="grid">
+                                <i class="fas fa-th"></i>
+                            </button>
+                            <button class="view-btn" data-view="list">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+
+                        <div class="books-grid" id="booksGrid">
+                            <p>Loading books...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Borrowed Books Page -->
+                <div id="borrowed" class="page-content student-only">
+                    <div class="page-header">
+                        <h1>My Borrowed Books</h1>
+                        <div class="borrowed-summary">
+                            <span class="summary-item">
+                                <strong id="totalBorrowed">3</strong> currently borrowed
+                            </span>
+                            <span class="summary-item">
+                                <strong id="dueSoon">1</strong> due this week
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="borrowed-books-list" id="borrowedBooksList">
+                        <p>Loading borrowed books...</p>
+                    </div>
+                </div>
+
+                <!-- Profile Page -->
+                <div id="profile" class="page-content">
+                    <div class="profile-container">
+                        <div class="profile-header">
+                            <div class="profile-avatar">
+                                <img src="/api/placeholder/100/100" alt="Profile Picture">
+                            </div>
+                            <div class="profile-info">
+                                <h2 id="profileName">User Name</h2>
+                                <p id="profileDetails">Loading profile...</p>
+                                <div class="profile-stats student-only">
+                                    <div class="profile-stat">
+                                        <span class="stat-value">15</span>
+                                        <span class="stat-label">Books Read</span>
+                                    </div>
+                                    <div class="profile-stat">
+                                        <span class="stat-value">12</span>
+                                        <span class="stat-label">Day Streak</span>
+                                    </div>
+                                    <div class="profile-stat">
+                                        <span class="stat-value">340</span>
+                                        <span class="stat-label">XP Points</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="profile-sections">
+                            <div class="profile-section student-only">
+                                <h3>Reading History</h3>
+                                <div class="reading-history" id="readingHistory">
+                                    <div class="history-item">
+                                        <div class="history-book">
+                                            <img src="/api/placeholder/40/50" alt="Book">
+                                            <div class="history-details">
+                                                <h4>Machine Learning Basics</h4>
+                                                <p>Completed on Dec 15, 2023</p>
+                                            </div>
+                                        </div>
+                                        <div class="history-rating">
+                                            <span class="rating">★★★★★</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="profile-section">
+                                <h3>Account Settings</h3>
+                                <div class="settings-list">
+                                    <div class="setting-item">
+                                        <span>Email Notifications</span>
+                                        <label class="switch">
+                                            <input type="checkbox" checked>
+                                            <span class="slider"></span>
+                                        </label>
+                                    </div>
+                                    <div class="setting-item">
+                                        <span>SMS Reminders</span>
+                                        <label class="switch">
+                                            <input type="checkbox" checked>
+                                            <span class="slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Borrow Modal -->
+    <div id="borrowModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirm Book Borrowing</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="book-confirm-details">
+                    <img id="borrowBookCover" src="/api/placeholder/80/100" alt="Book cover">
+                    <div class="confirm-info">
+                        <h4 id="borrowBookTitle">Book Title</h4>
+                        <p id="borrowBookAuthor">Author Name</p>
+                        <div class="borrow-terms">
+                            <p><strong>Due Date:</strong> <span id="borrowDueDate">February 15, 2024</span></p>
+                            <p><strong>Late Fee:</strong> ₹5 per day after due date</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn--outline" id="cancelBorrow">Cancel</button>
+                <button class="btn btn--primary" id="confirmBorrow">Confirm Borrow</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Toast -->
+    <div id="toast" class="toast hidden">
+        <div class="toast-content">
+            <i class="fas fa-check-circle"></i>
+            <span class="toast-message"></span>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
